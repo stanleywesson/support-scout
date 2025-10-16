@@ -38,11 +38,12 @@ export const useTicketsStore = defineStore('tickets', () => {
     const activeTickets = computed(() => tickets.value.filter(x => !x.isArchived));
     const archivedTickets = computed(() => tickets.value.filter(x => x.isArchived));
 
-    function addTicket(ticket: Omit<Ticket, 'id' | 'archived' | 'agent'>) {
+    function addTicket(ticket: Omit<Ticket, 'id' | 'isArchived' | 'agent' | 'status'>) {
         const newTicket: Ticket = {
             ...ticket,
             id: Math.max(0, ...tickets.value.map(x => x.id)) + 1,
-            isArchived: false
+            isArchived: false,
+            status: 'Open'
         }
 
         tickets.value.push(newTicket);
