@@ -6,6 +6,7 @@ import vue from '@vitejs/plugin-vue'
 import tailwindcss from "@tailwindcss/vite" 
 
 export default defineConfig({
+  base:'/support-scout/',
   plugins: [
     vue(),
     tailwindcss(), // Add the Tailwind CSS Vite plugin here
