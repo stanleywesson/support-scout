@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import { getOffsetDate } from '@/utils/date';
 
 export const statuses = ['Open', 'In Progress', 'Closed'] as const;
 export const supportAgents = ref(['Stan', 'Priska', 'Edward', 'Fred', 'Chaldine'] as const);
@@ -13,7 +14,8 @@ export interface Ticket {
     description: string,
     status: Status,
     isArchived: boolean,
-    agent?: Agent
+    agent?: Agent,
+    createdAt?: Date
 }
 
 export const useTicketsStore = defineStore('tickets', () => {
@@ -23,7 +25,8 @@ export const useTicketsStore = defineStore('tickets', () => {
             title: 'UI button is misaligned',
             description: 'The main login button on the home page is off-center on mobile.',
             status: 'Open',
-            isArchived: false
+            isArchived: false,
+            createdAt: getOffsetDate(1)
         },
         {
             id: 2,
@@ -31,7 +34,8 @@ export const useTicketsStore = defineStore('tickets', () => {
             description: 'The user profile endpoint is crashing when no avatar is set.',
             status: 'In Progress',
             isArchived: false,
-            agent: supportAgents.value[0]
+            agent: supportAgents.value[0],
+            createdAt: getOffsetDate(4)
         }
     ])
 
@@ -43,7 +47,8 @@ export const useTicketsStore = defineStore('tickets', () => {
             ...ticket,
             id: Math.max(0, ...tickets.value.map(x => x.id)) + 1,
             isArchived: false,
-            status: 'Open'
+            status: 'Open',
+            createdAt: new Date()
         }
 
         tickets.value.push(newTicket);
@@ -78,13 +83,10 @@ export const useTicketsStore = defineStore('tickets', () => {
     }
 
     function addAgent(name: string) {
-        // What if agents have the same name.
         (supportAgents.value as any).push(name);
     }
 
     function removeAgent(name: string) {
-        // What if agents have the same name.
-        // Can only remove agent if no tickets are assigned to them
         const index = (supportAgents.value as readonly string[]).indexOf(name);
 
         if (index !== -1) {

@@ -5,6 +5,7 @@ import { storeToRefs } from 'pinia';
 import AddTicketForm from '@/components/AddTicketForm.vue';
 import Modal from '@/components/Modal.vue';
 import { useToast } from 'vue-toastification';
+import { toShortDate } from '@/utils/date';
 
 const toast = useToast();
 
@@ -54,6 +55,10 @@ function archiveAndNotify(ticketId: number) {
                             class="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Description</th>
                         <th scope="col"
+                            class="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                            Created At
+                        </th>
+                        <th scope="col"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Agent
                         </th>
@@ -77,6 +82,8 @@ function archiveAndNotify(ticketId: number) {
                         </td>
                         <td class="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{
                             ticket.description }}</td>
+                        <td class="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{
+                            toShortDate(ticket.createdAt) }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ ticket.agent ?? 'Unassigned' }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
