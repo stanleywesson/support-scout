@@ -1,22 +1,56 @@
 name: Build and Deploy
-on:
-  push:
-    branches:
-      - master
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v2.3.1
-
-      - name: Install and Build 🔧
-        run: |
-          npm install
-          npm run build
-
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@4.1.4
-        with:
-          branch: gh-pages
-          folder: dist
+  
+   on:
+     push:
+       branches:
+         - master # Make sure this is your repository's default branch ('main' is also common)
+  
+   jobs:
+     build-and-deploy:
+        runs-on: ubuntu-latest
+        steps:
+          # 1. Checks out your repository's code
+          - name: Checkout 🛎️
+            uses: actions/checkout@v4
+   
+          # 2. Sets up the specific version of Node.js your project uses
+          - name: Setup Node.js
+            uses: actions/setup-node@v4
+            with:
+              node-version: '20'
+   
+          # 3. Sets up pnpm itself
+          - name: Setup pnpm
+            uses: pnpm/action-setup@v2
+            with:
+              version: 8 # You can change this to your pnpm version
+   
+          # 4. Caches pnpm dependencies for much faster installs on subsequent runs
+          - name: Get pnpm store directory
+            id: pnpm-cache
+            shell: bash
+            run: |
+              echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+   
+          - name: Setup pnpm cache
+            uses: actions/cache@v3
+            with:
+              path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+              key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+              restore-keys: |
+                ${{ runner.os }}-pnpm-store-
+   
+          # 5. Installs dependencies using the cache if available
+          - name: Install dependencies
+            run: pnpm install
+   
+          # 6. Runs the build script using pnpm
+          - name: Build application
+            run: pnpm run build
+   
+          # 7. Deploys the 'dist' folder to the 'gh-pages' branch
+          - name: Deploy 🚀
+            uses: JamesIves/github-pages-deploy-action@v4
+            with:
+              branch: gh-pages
+              folder: dist
