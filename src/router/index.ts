@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -6,26 +6,26 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import("@/views/HomeView.vue"),
-      props: { filter: 'active' }
+      component: () => import('@/views/HomeView.vue'),
+      props: { filter: 'active' },
     },
     {
       path: '/archive',
       name: 'archive',
       component: () => import('@/views/HomeView.vue'),
-      props: { filter: 'archive' }
+      props: { filter: 'archive' },
     },
     {
       path: '/ticket/:id',
       name: 'ticket-detail',
-      component: () => import("@/views/TicketView.vue")
+      component: () => import('@/views/TicketView.vue'),
     },
     {
       path: '/agents',
       name: 'agent-manager',
-      component: () => import("@/views/AgentManager.vue")
-    }
-  ]
-});
+      component: () => import('@/views/AgentManager.vue'),
+    },
+  ],
+})
 
-export default router;
+export default router

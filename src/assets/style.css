@@ -1,23 +1,23 @@
- @import "tailwindcss";
+@import 'tailwindcss';
 
- /* Fade transition (for overlays and modals) */
- .fade-enter-active,
- .fade-leave-active {
-     transition: opacity 0.3s ease;
- }
+/* Fade transition (for overlays and modals) */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
 
- .fade-enter-from,
- .fade-leave-to {
-     opacity: 0;
- }
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
 
- /* Slide transition (for the drawer menu) */
- .slide-enter-active,
- .slide-leave-active {
-     transition: transform 0.3s ease;
- }
+/* Slide transition (for the drawer menu) */
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.3s ease;
+}
 
- .slide-enter-from,
- .slide-leave-to {
-     transform: translateX(-100%);
- }
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(-100%);
+}

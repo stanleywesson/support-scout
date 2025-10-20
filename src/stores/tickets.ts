@@ -1,98 +1,97 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { getOffsetDate } from '@/utils/date';
+import type { Ticket, Status, Agent } from '@/api/mockApi'
+import { api, statuses } from '@/api/mockApi'
 
-export const statuses = ['Open', 'In Progress', 'Closed'] as const;
-export const supportAgents = ref(['Stan', 'Priska', 'Edward', 'Fred', 'Chaldine'] as const);
-
-export type Status = typeof statuses[number];
-export type Agent = typeof supportAgents.value[number];
-
-export interface Ticket {
-    id: number,
-    title: string,
-    description: string,
-    status: Status,
-    isArchived: boolean,
-    agent?: Agent,
-    createdAt?: Date
-}
+export { statuses }
 
 export const useTicketsStore = defineStore('tickets', () => {
-    const tickets = ref<Ticket[]>([
-        {
-            id: 1,
-            title: 'UI button is misaligned',
-            description: 'The main login button on the home page is off-center on mobile.',
-            status: 'Open',
-            isArchived: false,
-            createdAt: getOffsetDate(1)
-        },
-        {
-            id: 2,
-            title: 'API call returns 500 error',
-            description: 'The user profile endpoint is crashing when no avatar is set.',
-            status: 'In Progress',
-            isArchived: false,
-            agent: supportAgents.value[0],
-            createdAt: getOffsetDate(4)
-        }
-    ])
+  const tickets = ref<Ticket[]>([])
+  const supportAgents = ref<Agent[]>([])
+  const loading = ref(false)
+  const error = ref<string | null>(null)
 
-    const activeTickets = computed(() => tickets.value.filter(x => !x.isArchived));
-    const archivedTickets = computed(() => tickets.value.filter(x => x.isArchived));
+  const activeTickets = computed(() => tickets.value.filter((x) => !x.isArchived))
+  const archivedTickets = computed(() => tickets.value.filter((x) => x.isArchived))
 
-    function addTicket(ticket: Omit<Ticket, 'id' | 'isArchived' | 'agent' | 'status'>) {
-        const newTicket: Ticket = {
-            ...ticket,
-            id: Math.max(0, ...tickets.value.map(x => x.id)) + 1,
-            isArchived: false,
-            status: 'Open',
-            createdAt: new Date()
-        }
-
-        tickets.value.push(newTicket);
+  async function fetchTickets() {
+    loading.value = true
+    error.value = null
+    try {
+      tickets.value = await api.getTickets()
+    } catch {
+      error.value = 'Failed to fetch tickets.'
+    } finally {
+      loading.value = false
     }
+  }
 
-    function updateTicketStatus(ticketId: number, status: Status) {
-        const ticket = tickets.value.find(x => x.id == ticketId);
-
-        if (ticket) {
-            ticket.status = status;
-
-            if (status !== 'Closed') {
-                ticket.isArchived = false;
-            }
-        }
+  async function fetchAgents() {
+    loading.value = true
+    error.value = null
+    try {
+      supportAgents.value = await api.getAgents()
+    } catch {
+      error.value = 'Failed to fetch agents.'
+    } finally {
+      loading.value = false
     }
+  }
 
-    function archiveTicket(ticketId: number) {
-        const ticket = tickets.value.find(x => x.id == ticketId);
+  async function addTicket(ticket: Omit<Ticket, 'id' | 'isArchived' | 'agent' | 'status'>) {
+    const newTicket = await api.addTicket(ticket)
+    tickets.value.push(newTicket)
+  }
 
-        if (ticket && ticket.status === 'Closed') {
-            ticket.isArchived = true;
-        }
+  async function updateTicketStatus(ticketId: number, status: Status) {
+    const updatedTicket = await api.updateTicketStatus(ticketId, status)
+    const index = tickets.value.findIndex((x) => x.id === ticketId)
+
+    if (index !== -1) tickets.value[index] = { ...updatedTicket }
+  }
+
+  async function archiveTicket(ticketId: number) {
+    const updatedTicket = await api.archiveTicket(ticketId)
+    const index = tickets.value.findIndex((x) => x.id === ticketId)
+
+    if (index !== -1) tickets.value[index] = { ...updatedTicket }
+  }
+
+  async function assignAgent(ticketId: number, agent: Agent) {
+    const updatedTicket = await api.assignAgent(ticketId, agent)
+    const index = tickets.value.findIndex((x) => x.id === ticketId)
+
+    if (index !== -1) tickets.value[index] = { ...updatedTicket }
+  }
+
+  async function addAgent(name: string) {
+    const newAgent = await api.addAgent(name)
+    supportAgents.value.push(newAgent as Agent)
+  }
+
+  async function removeAgent(name: string) {
+    await api.removeAgent(name)
+    const index = supportAgents.value.indexOf(name as Agent)
+
+    if (index !== -1) {
+      supportAgents.value.splice(index, 1)
     }
+  }
 
-    function assignAgent(ticketId: number, agent: Agent) {
-        const ticket = tickets.value.find(x => x.id == ticketId);
-
-        if (ticket) {
-            ticket.agent = agent;
-        }
-    }
-
-    function addAgent(name: string) {
-        (supportAgents.value as any).push(name);
-    }
-
-    function removeAgent(name: string) {
-        const index = (supportAgents.value as readonly string[]).indexOf(name);
-
-        if (index !== -1) {
-            (supportAgents.value as any).splice(index, 1);
-        }
-    }
-
-    return { tickets, supportAgents, addTicket, updateTicketStatus, activeTickets, archivedTickets, archiveTicket, assignAgent, addAgent, removeAgent }
+  return {
+    tickets,
+    supportAgents,
+    loading,
+    error,
+    fetchAgents,
+    fetchTickets,
+    addTicket,
+    updateTicketStatus,
+    activeTickets,
+    archivedTickets,
+    archiveTicket,
+    assignAgent,
+    addAgent,
+    removeAgent,
+  }
 })
