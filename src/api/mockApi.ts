@@ -4,6 +4,9 @@ import { getOffsetDate } from '@/utils/date'
 export const statuses = ['Open', 'In Progress', 'Closed'] as const
 export type Status = (typeof statuses)[number]
 
+export const priorities = ['Low', 'Medium', 'High', 'Urgent'] as const
+export type Priority = (typeof priorities)[number]
+
 export const supportAgents = ['Stan', 'Priska', 'Edward', 'Fred', 'Chaldine'] as const
 export type Agent = (typeof supportAgents)[number]
 
@@ -15,6 +18,7 @@ export interface Ticket {
   isArchived: boolean
   agent?: Agent
   createdAt?: Date
+  priority: Priority
 }
 
 // --- In-Memory Database ---
@@ -26,6 +30,7 @@ const initialTickets: Ticket[] = [
     status: 'Open',
     isArchived: false,
     createdAt: getOffsetDate(1),
+    priority: 'Medium'
   },
   {
     id: 2,
@@ -35,6 +40,7 @@ const initialTickets: Ticket[] = [
     isArchived: false,
     agent: 'Stan',
     createdAt: getOffsetDate(4),
+    priority: 'Medium'
   },
 ]
 

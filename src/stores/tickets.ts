@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import type { Ticket, Status, Agent } from '@/api/mockApi'
+import type { Ticket, Status, Agent, Priority } from '@/api/mockApi'
 import { api, statuses } from '@/api/mockApi'
 
 export { statuses }

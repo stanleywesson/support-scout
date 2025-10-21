@@ -6,12 +6,12 @@ This document outlines the development plan for the Standesk application, organi
 
 **Objective:** Decouple the UI from hardcoded data by creating a mock API layer. This is the highest priority and the foundation for all future development.
 
-- [ ] **Create a Mock API Service:**
-    - [ ] Establish a new `src/api` directory.
-    - [ ] Develop a `mockApi.ts` service to manage data (tickets, agents) in memory.
-    - [ ] Expose functions that simulate real API calls (`getTickets`, `addTicket`, etc.), returning Promises.
-- [ ] **Refactor Pinia Stores:**
-    - [ ] Update all stores to fetch and manipulate data by calling the mock API service instead of using hardcoded values.
+- [x] **Create a Mock API Service:**
+    - [x] Establish a new `src/api` directory.
+    - [x] Develop a `mockApi.ts` service to manage data (tickets, agents) in memory.
+    - [x] Expose functions that simulate real API calls (`getTickets`, `addTicket`, etc.), returning Promises.
+- [x] **Refactor Pinia Stores:**
+    - [x] Update all stores to fetch and manipulate data by calling the mock API service instead of using hardcoded values.
 
 ## Phase 2: Enhance Core Ticketing Features
 

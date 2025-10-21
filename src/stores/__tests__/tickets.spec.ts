@@ -1,7 +1,7 @@
 import { createPinia, setActivePinia } from 'pinia'
 import { useTicketsStore } from '../tickets'
 import { beforeEach, describe, it, expect } from 'vitest'
-import { api } from '@/api/mockApi'
+import { api, type Ticket } from '@/api/mockApi'
 
 describe('Tickets Store', () => {
   beforeEach(async () => {
@@ -38,4 +38,23 @@ describe('Tickets Store', () => {
     await expect(store.archiveTicket(ticket!.id)).rejects.toThrow('Ticket must be closed to be archived');
     expect(ticket!.isArchived).toBe(false)
   })
+
+  it('Add ticket', async () => {
+    const store = useTicketsStore();
+    const originalCount = store.tickets.length;
+
+    const newTicket: Ticket = {
+      id: 3,
+      description: 'This is a unit test item',
+      title: 'Test Item',
+      status: 'Open',
+      priority: 'Low',
+      isArchived: false
+    }
+
+    await store.addTicket(newTicket);
+    const count = store.tickets.length;
+
+    expect(count).toBe(originalCount + 1);
+  });
 })

@@ -75,6 +75,10 @@ function archiveAndNotify(ticketId: number) {
               Description
             </th>
             <th scope="col"
+              class="md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Priority
+            </th>
+            <th scope="col"
               class="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
               Created At
             </th>
@@ -101,6 +105,9 @@ function archiveAndNotify(ticketId: number) {
             </td>
             <td class="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
               {{ ticket.description }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              {{ ticket.priority }}
             </td>
             <td class="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
               {{ toShortDate(ticket.createdAt) }}
