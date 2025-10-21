@@ -18,7 +18,7 @@ export interface Ticket {
 }
 
 // --- In-Memory Database ---
-const tickets: Ticket[] = [
+const initialTickets: Ticket[] = [
   {
     id: 1,
     title: 'UI button is misaligned',
@@ -38,18 +38,38 @@ const tickets: Ticket[] = [
   },
 ]
 
-const agents: Agent[] = [...supportAgents]
+const initialAgents: Agent[] = [...supportAgents]
+
+let tickets: Ticket[];
+let agents: Agent[];
+
+resetState();
+
+function resetState() {
+  tickets = JSON.parse(JSON.stringify(initialTickets));
+  agents = [...initialAgents];
+}
 
 // --- Simulated API methods ---
 const SIMULATED_DELAY = 500
 
 function withDelay<T>(data: T): Promise<T> {
+  // Return data immediately for unit tests.
+  if (import.meta.env.VITEST) {
+    return Promise.resolve(data)
+  }
+
   return new Promise((resolve) => {
     setTimeout(() => resolve(data), SIMULATED_DELAY)
   })
 }
 
 export const api = {
+  reset: () => {
+    resetState()
+    return withDelay({})
+  },
+
   getTickets: () => withDelay([...tickets]),
 
   getAgents: () => withDelay([...agents]),

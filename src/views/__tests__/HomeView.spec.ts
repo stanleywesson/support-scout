@@ -1,6 +1,7 @@
 import { mount, RouterLinkStub } from '@vue/test-utils'
 import { createTestingPinia } from '@pinia/testing'
 import HomeView from '../HomeView.vue'
+import { beforeEach, describe, it, expect } from 'vitest'
 
 describe('HomeView.vue', () => {
   const createMockPinia = () => {
@@ -16,7 +17,7 @@ describe('HomeView.vue', () => {
     })
   }
 
-  it('displays unarchived tickets when filter is active', () => {
+  it('displays active tickets when filter is active', () => {
     const wrapper = mount(HomeView, {
       props: {
         filter: 'active',

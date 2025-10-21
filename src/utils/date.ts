@@ -4,12 +4,14 @@ export function getOffsetDate(daysOffset: number) {
   return x
 }
 
-export function toShortDate(date?: Date) {
+export function toShortDate(date?: Date | string) {
   if (!date) {
     return ''
   }
 
-  return date.toLocaleDateString(undefined, {
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+
+  return dateObj.toLocaleDateString(undefined, {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
