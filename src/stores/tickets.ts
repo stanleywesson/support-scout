@@ -50,6 +50,13 @@ export const useTicketsStore = defineStore('tickets', () => {
     if (index !== -1) tickets.value[index] = { ...updatedTicket }
   }
 
+  async function updateTicketPriority(ticketId: number, priority: Priority) {
+    const updatedTicket = await api.updateTicketPriority(ticketId, priority)
+    const index = tickets.value.findIndex((x) => x.id === ticketId)
+
+    if (index !== -1) tickets.value[index] = { ...updatedTicket }
+  }
+
   async function archiveTicket(ticketId: number) {
     const updatedTicket = await api.archiveTicket(ticketId)
     const index = tickets.value.findIndex((x) => x.id === ticketId)
@@ -93,5 +100,6 @@ export const useTicketsStore = defineStore('tickets', () => {
     assignAgent,
     addAgent,
     removeAgent,
+    updateTicketPriority
   }
 })

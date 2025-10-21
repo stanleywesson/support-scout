@@ -104,6 +104,15 @@ export const api = {
     return Promise.reject(new Error('Ticket not found'))
   },
 
+  updateTicketPriority: (ticketId: number, priority: Priority) => {
+    const ticket = tickets.find((x) => x.id === ticketId)
+    if (ticket) {
+      ticket.priority = priority
+      return withDelay(ticket)
+    }
+    return Promise.reject(new Error('Ticket not found'))
+  },
+
   archiveTicket: (ticketId: number) => {
     const ticket = tickets.find((x) => x.id === ticketId)
     if (ticket && ticket.status === 'Closed') {

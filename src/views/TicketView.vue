@@ -2,7 +2,8 @@
 import { useRoute } from 'vue-router'
 import { computed, onMounted } from 'vue'
 import { useTicketsStore } from '@/stores/tickets'
-import type { Agent } from '@/api/mockApi'
+import type { Agent, Priority } from '@/api/mockApi'
+import { priorities } from '@/api/mockApi'
 import { toShortDate } from '@/utils/date'
 import { storeToRefs } from 'pinia'
 
@@ -27,15 +28,18 @@ const assignAgent = (event: Event) => {
   const agent = (event.target as HTMLSelectElement).value as Agent
   ticketsStore.assignAgent(ticketId, agent)
 }
+
+const updatePriority = (event: Event) => {
+  const priority = (event.target as HTMLSelectElement).value as Priority;
+  ticketsStore.updateTicketPriority(ticketId, priority);
+}
 </script>
 
 <template>
   <div class="p-4 sm:p-6">
     <div class="mb-4">
-      <RouterLink
-        :to="{ name: 'home' }"
-        class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-      >
+      <RouterLink :to="{ name: 'home' }"
+        class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
         &larr; Back to all tickets
       </RouterLink>
     </div>
@@ -79,19 +83,23 @@ const assignAgent = (event: Event) => {
             </dd>
           </div>
           <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Priority</dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+              <select @change="updatePriority"
+                class="mt-1 block w-full pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                <option v-for="p in priorities" :key="p" :value="p" :selected="ticket.priority === p">
+                  {{ p }}
+                </option>
+              </select>
+            </dd>
+          </div>
+          <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt class="text-sm font-medium text-gray-500">Agent</dt>
             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              <select
-                @change="assignAgent"
-                class="mt-1 block w-full pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-              >
+              <select @change="assignAgent"
+                class="mt-1 block w-full pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                 <option :value="undefined">Unassigned</option>
-                <option
-                  v-for="agent in supportAgents"
-                  :key="agent"
-                  :value="agent"
-                  :selected="ticket.agent === agent"
-                >
+                <option v-for="agent in supportAgents" :key="agent" :value="agent" :selected="ticket.agent === agent">
                   {{ agent }}
                 </option>
               </select>
