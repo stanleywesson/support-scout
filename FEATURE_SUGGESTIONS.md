@@ -17,11 +17,11 @@ This document outlines the development plan for the Standesk application, organi
 
 **Objective:** Build out the essential features for managing tickets, now powered by the mock API.
 
-- [ ] **Implement Full Ticket Lifecycle:**
-    - [ ] Allow agents to update a ticket's status, priority, and assigned agent from the `TicketView`.
-- [ ] **Add Comments/Discussion:**
-    - [ ] Create a component to display comments on a ticket.
-    - [ ] Add a form to allow users to add new comments.
+- [x] **Implement Full Ticket Lifecycle:**
+    - [x] Allow agents to update a ticket's status, priority, and assigned agent from the `TicketView`.
+- [x] **Add Comments/Discussion:**
+    - [x] Create a component to display comments on a ticket.
+    - [x] Add a form to allow users to add new comments.
 - [ ] **Implement Ticket Filtering and Sorting:**
     - [ ] Add UI controls to filter tickets by status or agent.
     - [ ] Allow users to sort tickets by creation date or priority.

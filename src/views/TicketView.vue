@@ -6,6 +6,7 @@ import type { Agent, Priority } from '@/api/mockApi'
 import { priorities } from '@/api/mockApi'
 import { toShortDate } from '@/utils/date'
 import { storeToRefs } from 'pinia'
+import TicketComments from '@/components/TicketComments.vue'
 
 const route = useRoute()
 const ticketId = Number(route.params.id)
@@ -107,6 +108,7 @@ const updatePriority = (event: Event) => {
           </div>
         </dl>
       </div>
+      <TicketComments v-if="ticket" :ticket="ticket" class="px-4 py-5 sm:px-6" />
     </div>
     <div v-else class="text-center p-8">
       <h2 class="text-2xl font-bold text-gray-800">Ticket not found</h2>

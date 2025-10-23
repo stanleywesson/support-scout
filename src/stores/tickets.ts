@@ -85,6 +85,19 @@ export const useTicketsStore = defineStore('tickets', () => {
     }
   }
 
+  async function addComment(ticketId: number, text: string) {
+    // Add entry to source data
+    const ticket = await api.addComment(ticketId, text);
+
+    if (ticket) {
+      const ticketIndex = tickets.value.findIndex((t) => t.id === ticketId)
+
+      if (ticketIndex !== -1) {
+        tickets.value[ticketIndex] = ticket
+      }
+    }
+  }
+
   return {
     tickets,
     supportAgents,
@@ -100,6 +113,7 @@ export const useTicketsStore = defineStore('tickets', () => {
     assignAgent,
     addAgent,
     removeAgent,
-    updateTicketPriority
+    updateTicketPriority,
+    addComment
   }
 })

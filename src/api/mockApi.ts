@@ -18,7 +18,15 @@ export interface Ticket {
   isArchived: boolean
   agent?: Agent
   createdAt?: Date
-  priority: Priority
+  priority: Priority,
+  comments: Comment[]
+}
+
+export interface Comment {
+  id: number,
+  author: Agent | 'Anonymous',
+  text: string,
+  createdAt: Date
 }
 
 // --- In-Memory Database ---
@@ -30,7 +38,8 @@ const initialTickets: Ticket[] = [
     status: 'Open',
     isArchived: false,
     createdAt: getOffsetDate(1),
-    priority: 'Medium'
+    priority: 'Medium',
+    comments: []
   },
   {
     id: 2,
@@ -40,7 +49,8 @@ const initialTickets: Ticket[] = [
     isArchived: false,
     agent: 'Stan',
     createdAt: getOffsetDate(4),
-    priority: 'Medium'
+    priority: 'Medium',
+    comments: []
   },
 ]
 
@@ -80,13 +90,14 @@ export const api = {
 
   getAgents: () => withDelay([...agents]),
 
-  addTicket: (ticket: Omit<Ticket, 'id' | 'isArchived' | 'agent' | 'status'>) => {
+  addTicket: (ticket: Omit<Ticket, 'id' | 'isArchived' | 'agent' | 'status' | 'comments'>) => {
     const newTicket: Ticket = {
       ...ticket,
       id: Math.max(0, ...tickets.map((x) => x.id)) + 1,
       isArchived: false,
       status: 'Open',
       createdAt: new Date(),
+      comments: []
     }
     tickets.push(newTicket)
     return withDelay(newTicket)
@@ -145,4 +156,22 @@ export const api = {
     }
     return Promise.reject(new Error('Agent not found'))
   },
+
+  addComment: (ticketId: number, comment: string) => {
+    const ticket = tickets.find(x => x.id === ticketId);
+
+    if (ticket) {
+      const newComment: Comment = {
+        id: Math.max(0, ...ticket.comments.map(x => x.id)) + 1,
+        author: 'Anonymous',
+        text: comment,
+        createdAt: new Date()
+      }
+
+      ticket.comments.push(newComment);
+      return withDelay(ticket);
+    }
+
+    return Promise.reject(new Error('Ticket not found'));
+  }
 }
