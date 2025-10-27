@@ -15,7 +15,7 @@ describe('Tickets Store', () => {
     // Get a ticket to test
     const store = useTicketsStore()
     const ticket = store.tickets.find(x => x.id === 1);
-    expect(ticket).toBeDefined;
+    expect(ticket).toBeDefined();
 
     // Close the ticket
     await store.updateTicketStatus(ticket!.id, 'Closed');
@@ -23,7 +23,8 @@ describe('Tickets Store', () => {
 
     // Archive the ticket
     await store.archiveTicket(ticket!.id);
-    expect(ticket!.isArchived).toBe(true)
+    const updatedTicket = store.tickets.find(x => x.id === 1);
+    expect(updatedTicket!.isArchived).toBe(true)
   })
 
   it('does not archive a ticket that is not closed', async () => {
@@ -49,7 +50,8 @@ describe('Tickets Store', () => {
       title: 'Test Item',
       status: 'Open',
       priority: 'Low',
-      isArchived: false
+      isArchived: false,
+      comments: []
     }
 
     await store.addTicket(newTicket);
